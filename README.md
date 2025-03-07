@@ -28,9 +28,6 @@ pip install 'isaacsim[all,extscache]==4.5.0' --extra-index-url https://pypi.nvid
 # Install Isaac Lab v2.0.2 (make sure you have build dependencies first, e.g. `sudo apt install cmake build-essential` on ubuntu)
 git clone --branch v2.0.2 https://github.com/isaac-sim/IsaacLab.git
 ./isaaclab.sh -i
-
-# Downgrade gymnasium to <v1.0
-pip install gymnasium==0.29.1
 ```
 
 Source: https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/index.html
