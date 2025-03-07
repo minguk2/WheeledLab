@@ -50,7 +50,13 @@ class CustomRecordVideo(RecordVideo):
             clip = ImageSequenceClip(self.recorded_frames, fps=60)
             moviepy_logger = None if self.disable_logger else "bar"
             path = os.path.join(self.video_folder, f"{self._video_name}.mp4")
-            clip.write_videofile(path, logger=moviepy_logger, preset="veryslow")
+            clip.write_videofile(
+                path,
+                codec="libx265",
+                ffmpeg_params=["-crf", "28"],
+                logger=moviepy_logger,
+                preset="veryslow",
+            )
             if self.enable_wandb:
                 wandb.log({"Video": wandb.Video(path)}, commit=False)
 
