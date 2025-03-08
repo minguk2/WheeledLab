@@ -51,15 +51,18 @@ class CustomRecordVideo(RecordVideo):
                     'MoviePy is not installed, run `pip install "gymnasium[other]"`'
                 ) from e
 
-            clip = ImageSequenceClip(self.recorded_frames, fps=60).resized(
-                new_size=self.video_resolution
-            )
+            clip = ImageSequenceClip(self.recorded_frames, fps=60)
             moviepy_logger = None if self.disable_logger else "bar"
             path = os.path.join(self.video_folder, f"{self._video_name}.webm")
             clip.write_videofile(
                 path,
                 logger=moviepy_logger,
-                ffmpeg_params=["-crf", str(self.video_crf)],
+                ffmpeg_params=[
+                    "-vf",
+                    f"scale={self.video_resolution[0]}:{self.video_resolution[1]}",
+                    "-crf",
+                    str(self.video_crf),
+                ],
                 preset="veryslow",
                 audio=False,
             )
