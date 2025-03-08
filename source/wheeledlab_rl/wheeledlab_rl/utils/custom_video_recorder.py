@@ -18,6 +18,8 @@ class CustomRecordVideo(RecordVideo):
         name_prefix: str = "rl-video",
         disable_logger: bool = False,
         enable_wandb: bool = True,
+        video_resolution: tuple[int, int] = (1280, 720),
+        video_crf: int = 30,
     ):
         if enable_wandb and wandb.run.name is None:
             raise ValueError("wandb must be initialized before wrapping.")
@@ -32,6 +34,8 @@ class CustomRecordVideo(RecordVideo):
             disable_logger,
         )
         self.enable_wandb = enable_wandb
+        self.video_resolution = video_resolution
+        self.video_crf = video_crf
 
     def stop_recording(self):
         """Stop current recording and saves the video."""
@@ -47,14 +51,17 @@ class CustomRecordVideo(RecordVideo):
                     'MoviePy is not installed, run `pip install "gymnasium[other]"`'
                 ) from e
 
-            clip = ImageSequenceClip(self.recorded_frames, fps=60)
+            clip = ImageSequenceClip(self.recorded_frames, fps=60).resized(
+                new_size=self.video_resolution
+            )
             moviepy_logger = None if self.disable_logger else "bar"
             path = os.path.join(self.video_folder, f"{self._video_name}.webm")
             clip.write_videofile(
                 path,
-                codec="libvpx-vp9",
-                ffmpeg_params=["-crf", "30", "-b:v", "0"],
                 logger=moviepy_logger,
+                ffmpeg_params=["-crf", str(self.video_crf)],
+                preset="veryslow",
+                audio=False,
             )
             if self.enable_wandb:
                 wandb.log({"Video": wandb.Video(path)}, commit=False)
