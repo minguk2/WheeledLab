@@ -25,9 +25,9 @@ class LogConfig:
     wandb_project: str = "WheeledLab"                   # Wandb project name
     test_mode: bool = False                             # Test mode (disable logging, wandb, video, checkpoints). Overrides other flags
     model_save_dirname: str = "models"                  # Path to save the model under log_dir
-    run_name: str = f"run-{random.randint(0, 1e7)}"     # Name of the run
     video_resolution: tuple[int, int] = (1280, 720)     # Resolution of the recorded video, Width x Height
     video_crf: int = 30                                 # Constant Rate Factor for video compression
+    run_name: str = f"run-{random.randint(0, 1e7)}"     # Name of the run
 
     @property
     def run_log_dir(self):

@@ -1,9 +1,10 @@
 import os
 from typing import Callable
 
+import av
 import gymnasium as gym
 import wandb
-from gymnasium import error, logger
+from gymnasium import logger
 from gymnasium.wrappers.rendering import RecordVideo
 
 
@@ -44,28 +45,25 @@ class CustomRecordVideo(RecordVideo):
         if len(self.recorded_frames) == 0:
             logger.warn("Ignored saving a video as there were zero frames to save.")
         else:
-            try:
-                from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
-            except ImportError as e:
-                raise error.DependencyNotInstalled(
-                    'MoviePy is not installed, run `pip install "gymnasium[other]"`'
-                ) from e
-
-            clip = ImageSequenceClip(self.recorded_frames, fps=60)
-            moviepy_logger = None if self.disable_logger else "bar"
             path = os.path.join(self.video_folder, f"{self._video_name}.mp4")
-            clip.write_videofile(
-                path,
-                logger=moviepy_logger,
-                ffmpeg_params=[
-                    "-vf",
-                    f"scale={self.video_resolution[0]}:{self.video_resolution[1]}",
-                    "-crf",
-                    str(self.video_crf),
-                ],
-                preset="veryslow",
-                audio=False,
+            output = av.open(path, "w")
+            output_stream = output.add_stream(
+                "libx264",
+                rate=self.frames_per_sec,
             )
+            output_stream.width, output_stream.height = self.video_resolution
+            output_stream.pix_fmt = "yuv420p"
+            output_stream.options = {"crf": str(self.video_crf), "preset": "veryslow"}
+            for frame in self.recorded_frames:
+                video_frame = av.VideoFrame.from_ndarray(frame, format="rgb24")
+                video_frame = video_frame.reformat(
+                    width=self.video_resolution[0], height=self.video_resolution[1]
+                )
+                packet = output_stream.encode(video_frame)
+                output.mux(packet)
+            packet = output_stream.encode()
+            output.mux(packet)
+            output.close()
             if self.enable_wandb:
                 wandb.log({"Video": wandb.Video(path)}, commit=False)
 
