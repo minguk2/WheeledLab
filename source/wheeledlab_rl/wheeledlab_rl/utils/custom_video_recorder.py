@@ -53,7 +53,7 @@ class CustomRecordVideo(RecordVideo):
 
             clip = ImageSequenceClip(self.recorded_frames, fps=60)
             moviepy_logger = None if self.disable_logger else "bar"
-            path = os.path.join(self.video_folder, f"{self._video_name}.webm")
+            path = os.path.join(self.video_folder, f"{self._video_name}.mp4")
             clip.write_videofile(
                 path,
                 logger=moviepy_logger,
