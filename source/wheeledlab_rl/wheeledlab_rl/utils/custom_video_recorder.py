@@ -52,7 +52,7 @@ class CustomRecordVideo(RecordVideo):
             output = av.open(path, "w")
             output_stream = output.add_stream(
                 "libx264",
-                rate=self.frames_per_sec,
+                rate=round(self.frames_per_sec),
             )
             output_stream.width, output_stream.height = self.video_resolution
             output_stream.pix_fmt = "yuv420p"
