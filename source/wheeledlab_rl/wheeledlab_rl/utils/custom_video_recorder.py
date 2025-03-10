@@ -5,19 +5,21 @@ import av
 import gymnasium as gym
 import wandb
 from gymnasium import logger
+from gymnasium.core import ActType, ObsType
 from gymnasium.wrappers.rendering import RecordVideo
 
 
 class CustomRecordVideo(RecordVideo):
     def __init__(
         self,
-        env: gym.Env,
+        env: gym.Env[ObsType, ActType],
         video_folder: str,
-        episode_trigger: Callable[[int], bool] = None,
-        step_trigger: Callable[[int], bool] = None,
+        episode_trigger: Callable[[int], bool] | None = None,
+        step_trigger: Callable[[int], bool] | None = None,
         video_length: int = 0,
         name_prefix: str = "rl-video",
-        disable_logger: bool = False,
+        fps: int | None = None,
+        disable_logger: bool = True,
         enable_wandb: bool = True,
         video_resolution: tuple[int, int] = (1280, 720),
         video_crf: int = 30,
@@ -32,6 +34,7 @@ class CustomRecordVideo(RecordVideo):
             step_trigger,
             video_length,
             name_prefix,
+            fps,
             disable_logger,
         )
         self.enable_wandb = enable_wandb
@@ -49,7 +52,7 @@ class CustomRecordVideo(RecordVideo):
             output = av.open(path, "w")
             output_stream = output.add_stream(
                 "libx264",
-                rate=60,
+                rate=self.frames_per_sec,
             )
             output_stream.width, output_stream.height = self.video_resolution
             output_stream.pix_fmt = "yuv420p"
