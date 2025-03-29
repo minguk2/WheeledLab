@@ -13,14 +13,16 @@ Environments, assets, workflow for open-source mobile robotics, integrated with 
 
 [Website](https://uwrobotlearning.github.io/WheeledLab/) | [Paper](https://arxiv.org/abs/2502.07380)
 
-## Installing IsaacLab (~30 min)
+## Installing IsaacLab (~20 min)
+
+Note: Only use this pip installation approach if you're on Ubuntu 22.04+ or Windows. For Ubuntu 20.04, install from the binaries. [link](https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/index.html)
 
 WheeledLab is built atop Isaac Lab. If you do not yet have Isaac Lab installed, it is open-source and installation instructions for Isaac Sim v4.5.0 and Isaac Lab v2.0.2 can be found below:
 
 ```bash
-# Create a conda environment named env_isaaclab and install Isaac Sim v4.5.0 in it:
-conda create -n env_isaaclab python=3.10
-conda activate env_isaaclab
+# Create a conda environment named WL and install Isaac Sim v4.5.0 in it:
+conda create -n WL python=3.10
+conda activate WL
 pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu121 # Or `pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu118` for CUDA 11
 pip install --upgrade pip
 pip install 'isaacsim[all,extscache]==4.5.0' --extra-index-url https://pypi.nvidia.com
@@ -58,6 +60,8 @@ pip install -e wheeledlab_tasks
 pip install -e wheeledlab_assets
 pip install -e wheeledlab_rl
 ```
+
+After this, we recommend [Setting Up VSCode](https://github.com/UWRobotLearning/WheeledLab?tab=readme-ov-file#training-quick-start).
 
 ## Training Quick Start
 
@@ -125,6 +129,7 @@ STRONGLY advised.
 2. `Ctrl` + `Shift` + `P` to bring up the VSCode command palette. type `Tasks:Run Task` or type until you see it show up and highlight it and press `Enter`.
 3. Click on `setup_python_env`. Follow the prompts until you're able to run the task. You should see a console at the bottom and the status of the task.
 4. If successful, you should now have `.vscode/{settings.json, launch.json}` in your `<WheeledLab>` repo and `settings.json` should have a populated list of paths under the `"python.analysis.extraPaths"` key.
+5. Make sure you at least have Microsoft's Python extension installed for intellisense to work. 
 
 ### If it still doesn't work
 
