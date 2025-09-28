@@ -1,5 +1,19 @@
 just folked this repo to review and utilize for my research.
 
+1. `wheeledlab` : has scripts for observations and actions.
+    1. might need to apply `ackermann_actions.py`, `actions_cfg.py`, and `rc_car_actions.py` to both my simulation model and the agent on jetson.
+2. `wheeledlab_assets`: includes configuration files and model assets
+    1. f1tenth hw setting in the simulation: `source/wheeledlab_assets/wheeledlab_assets/f1tenth.py `
+3. `wheeledlab_tasks`:
+
+
+## Other references
+
+[f1tenth-RL](https://github.com/MichaelBosello/f1tenth-RL?tab=readme-ov-file)
+(Platooning-F1Tenth)[https://github.com/pmusau17/Platooning-F1Tenth]
+[AutoDRIVE](https://github.com/ARMLabCUICAR/AutoDRIVE-F1TENTH-ARMLab)
+
+
 ## References
 
 ### This work
